@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import styles from "./page.module.css";
 
 const Page = () => {
   const [formData, setFormData] = useState({
@@ -55,38 +56,8 @@ const Page = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">Email address</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInput}
-            className="form-control"
-            id="email"
-            aria-describedby="email"
-            placeholder="Enter email"
-          />
-          <small id="email" className="form-text text-muted">
-            We will never share your email with anyone else.
-          </small>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            name="name"
-            onChange={handleInput}
-            value={formData.name}
-            className="form-control"
-            id="name"
-            aria-describedby="name"
-            placeholder="Enter Name"
-          />
-        </div>
-
+      <h3>Register</h3>
+      <form onSubmit={handleSubmit} className={styles.box}>
         <div className="form-group">
           <label htmlFor="username">Username</label>
           <input
@@ -110,18 +81,6 @@ const Page = () => {
             className="form-control"
             id="password"
             placeholder="Password"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="confirmpassword">Confirm Password</label>
-          <input
-            type="password"
-            name="confirmpassword"
-            onChange={handleInput}
-            value={formData.confirmpassword}
-            className="form-control"
-            id="confirmpassword"
-            placeholder="Confirm Password"
           />
         </div>
         <button type="submit" className="btn btn-primary">

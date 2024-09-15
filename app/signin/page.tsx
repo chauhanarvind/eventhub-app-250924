@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import styles from "./page.module.css";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [formData, setFormData] = useState({ username: "", password: "" }); // can be username/email, will look for any in db
@@ -12,29 +15,37 @@ const Page = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const router = useRouter();
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     try {
       console.log(formData);
-      const response = await fetch("/api/user/signin", {
-        method: "Post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "http://ec2-34-229-185-121.compute-1.amazonaws.com/login",
+        {
+          method: "Post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const result = await response.json();
 
       console.log("result=", result);
 
       if (response.ok) {
-        setMessage("User signed in successfully");
-        setFormData({ username: "", password: "" });
-
-        console.log(result.headers);
-        // console.log(token);
-
-        // setCookie("token", token, 1);
+        if (result.token) {
+          setMessage("User signed in successfully");
+          setFormData({ username: "", password: "" });
+          localStorage.setItem("token", result.token);
+          console.log("Token saved to local storage");
+          setMessage("Error: " + result.message);
+          router.push("/events");
+        } else {
+          console.log("Token not found in response");
+        }
       } else {
         console.log("error", result);
         setMessage("Error: " + result.message);
@@ -46,9 +57,11 @@ const Page = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      {/* <Header /> */}
+      <h3>Sign in</h3>
+      <form onSubmit={handleSubmit} className={styles.box}>
         <div className="form-group">
-          <label htmlFor="username">Username or email address</label>
+          <label htmlFor="username">Username</label>
           <input
             type="text"
             name="username"
@@ -73,9 +86,21 @@ const Page = () => {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">
+        <button
+          type="submit"
+          className={`btn btn-primary ${styles.buttoncontainer}`}
+        >
           Submit
         </button>
+
+        <Link href="/register">
+          <button
+            type="button"
+            className={`btn btn-primary ${styles.buttoncontainer}`}
+          >
+            New User
+          </button>
+        </Link>
       </form>
       {message && <p>{message}</p>}
     </div>

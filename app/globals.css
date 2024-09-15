@@ -27,3 +27,17 @@ body {
     text-wrap: balance;
   }
 }
+
+.navbarcustom {
+  position: fixed; /* Fix the navbar to the top */
+  top: 0; /* Position it at the top of the viewport */
+  left: 0; /* Align it to the left edge */
+  width: 100%; /* Make it span the full width */
+  z-index: 1000; /* Ensure it's on top of other elements */
+  /* border: 1px solid red; */
+  /* border: none !important; */
+}
+
+.bodyRest {
+  margin-top: 20px;
+}

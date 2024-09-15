@@ -7,11 +7,15 @@ import Card from "../components/card";
 const EventPage = () => {
   const [result, setResult] = useState([]);
   const [error, setError]: any = useState("");
+
   useEffect(() => {
     async function fetchEvents() {
       try {
         // Call the local Python API running on port 5000
-        const response = await fetch("/publicEvents.json");
+        const response = await fetch(
+          "http://ec2-34-229-185-121.compute-1.amazonaws.com/Items",
+          { method: "Get" }
+        );
         const data = await response.json();
         setResult(data);
         console.log(data);
