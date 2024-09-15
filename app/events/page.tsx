@@ -15,19 +15,20 @@ const EventPage = () => {
   useEffect(() => {
     async function fetchEvents() {
       try {
+        console.log("called");
         const response = await fetch(
           "http://ec2-34-229-185-121.compute-1.amazonaws.com/Items",
           { method: "GET" }
         );
         const data = await response.json();
         setResult(data);
-        console.log(data);
+        console.log(data.length);
       } catch (err) {
         setError(err);
       }
     }
 
-    async function fetchfavs() {
+    async function fetchFavs() {
       try {
         const result = await GetFavs();
         setFavs(result);
@@ -37,24 +38,27 @@ const EventPage = () => {
     }
 
     fetchEvents();
-    fetchfavs();
+    fetchFavs();
   }, []);
 
   return (
     <div className={styles.cardContainer}>
       {result.map((item: any, resultIndex: any) => (
         <div className={styles.category} key={resultIndex}>
-          {/* Pass the eventID as a query parameter */}
-          <Link href={`/events/${item.eventID}`}>
-            <Card
-              event={item}
-              favs={favs}
-              events={result}
-              setEvents={setResult}
-              parentComponent="events"
-              index={resultIndex}
-            />
-          </Link>
+          <div className={styles.cardContainer}>
+            {result.map((item: any, resultIndex: any) => (
+              <div className={styles.category} key={resultIndex}>
+                <Card
+                  event={item}
+                  favs={favs}
+                  events={result}
+                  setEvents={setResult}
+                  parentComponent="events"
+                  index={resultIndex}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       ))}
     </div>

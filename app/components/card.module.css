@@ -1,15 +1,56 @@
 .card {
+  background-color: #fff; /* White background for cards */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border: 0 !important;
-  min-height: 400px !important;
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 350px; /* Reduced height to make the card look thinner */
+  max-width: 280px; /* Set a max-width to make the card thinner */
+  transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
+  display: flex;
+  flex-direction: column; /* Ensures content is aligned vertically */
 }
 
-/* card.module.css */
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.cardImg {
+  width: 100%;
+  height: auto;
+  object-fit: cover; /* Ensures the image covers the card proportionally */
+  border-bottom: 1px solid #eaeaea; /* Adds a subtle divider */
+}
+
+.cardBody {
+  padding: 15px; /* Slightly reduce padding for a modern look */
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Makes the card body take the remaining space */
+}
+
+.cardTitle {
+  font-size: 1.2em; /* Adjust font size for a sleeker look */
+  margin-bottom: 10px;
+  color: #333; /* Darker color for better readability */
+}
+
+.cardText {
+  margin-bottom: 10px;
+  color: #666;
+  font-size: 0.9em; /* Slightly smaller font size */
+}
+
 .heart {
-  position: absolute; /* Position it absolutely */
-  bottom: 10px; /* Adjust this value to position it at the bottom */
-  right: 10px; /* Adjust this value to position it to the right */
-  cursor: pointer;
-  z-index: 1; /* Ensure it is above other elements if needed */
+  align-self: flex-end;
+  margin-top: auto;
+}
+
+.heart {
+  transition: transform 0.2s;
+}
+
+.heart:hover {
+  transform: scale(1.1);
 }

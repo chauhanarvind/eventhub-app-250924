@@ -1,14 +1,17 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import styles from "./card.module.css";
 import EventFormData from "../interface/eventFormData";
 import Heart from "./heart";
+import { useRouter } from "next/navigation";
+import EventDetail from "../events/detail/page";
 
 interface Props {
-  event: EventFormData; // Single event object
-  favs: EventFormData[]; // Array of favorite events
-  events: EventFormData[]; // Array of all events
-  setEvents: (events: EventFormData[]) => void; // Function to update events
-  parentComponent: string; // Name of the parent component or identifier
+  event: EventFormData;
+  favs: EventFormData[];
+  events: EventFormData[];
+  setEvents: (events: EventFormData[]) => void;
+  parentComponent: string;
   index: number;
 }
 
@@ -22,24 +25,34 @@ const Card = ({
 }: Props) => {
   const [heartClicked, setHeartClicked] = useState(false);
 
+  const router = useRouter();
+
   const maxname = 40;
   const maxdesc = 80;
   const maxlocation = 40;
 
-  event.name =
+  const name =
     event.name.length > maxname
       ? event.name.slice(0, maxname) + "..."
       : event.name;
 
-  event.description =
+  const description =
     event.description.length > maxdesc
       ? event.description.slice(0, maxdesc) + "..."
       : event.description;
 
-  event.location =
+  const location =
     event.location.length > maxlocation
       ? event.location.slice(0, maxlocation) + "..."
       : event.location;
+
+  const handleCardClick = (e: any) => {
+    e.preventDefault();
+
+    localStorage.setItem("event", JSON.stringify(event));
+    // Redirect to another page
+    router.push("/events/detail");
+  };
 
   useEffect(() => {
     if (favs.length !== 0) {
@@ -50,11 +63,11 @@ const Card = ({
     }
   }, [favs, event.eventID]);
 
-  event.time = new Date(event.time).toDateString();
+  let time = new Date(event.time).toDateString();
 
   async function handleHeartClicked() {
     const newHeartState = !heartClicked;
-    setHeartClicked(newHeartState); // Optimistically update the UI
+    setHeartClicked(newHeartState);
 
     try {
       const token = localStorage.getItem("token");
@@ -65,7 +78,6 @@ const Card = ({
 
       let response;
       if (newHeartState) {
-        // Add to favorites
         response = await fetch(
           `http://ec2-34-229-185-121.compute-1.amazonaws.com/addfav/${event.eventID}`,
           {
@@ -76,9 +88,7 @@ const Card = ({
             },
           }
         );
-        console.log(response);
       } else {
-        // Remove from favorites
         response = await fetch(
           `http://ec2-34-229-185-121.compute-1.amazonaws.com/delfav/${event.eventID}`,
           {
@@ -94,8 +104,6 @@ const Card = ({
           const updatedEvents = events.filter((_, idx) => idx !== index);
           setEvents(updatedEvents);
         }
-
-        console.log(response);
       }
 
       if (!response.ok) {
@@ -108,26 +116,21 @@ const Card = ({
   }
 
   return (
-    <div
-      className={`card ${styles.card}`}
-      style={{
-        width: "18rem",
-        display: "flex",
-        flexDirection: "column",
-        position: "relative",
-      }}
-    >
+    <div className={styles.card}>
       {event.imageUrl && (
-        <img className="card-img-top" src={event.imageUrl} alt={event.name} />
+        <img
+          className={styles.cardImg}
+          src={event.imageUrl}
+          alt={event.name}
+          onClick={handleCardClick}
+        />
       )}
 
-      <div className="card-body d-flex flex-column">
-        <h5 className="card-title">{event.name || "Event Name"}</h5>
-        <p className="card-text">
-          {event.description || "No description provided"}
-        </p>
-        <p className="card-text">{event.time || "No time provided"}</p>
-        <p className="card-text">{event.location || "No location provided"}</p>
+      <div className={styles.cardBody}>
+        <h5 className={styles.cardTitle}>{name}</h5>
+        <p className={styles.cardText}>{description}</p>
+        <p className={styles.cardText}>{time}</p>
+        <p className={styles.cardText}>{location}</p>
 
         <div className={styles.heart}>
           <Heart
