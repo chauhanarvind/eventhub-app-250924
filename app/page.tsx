@@ -9,7 +9,7 @@ export default function Home() {
   useEffect(() => {
     // Redirect to /events
     router.push("/events");
-  }, [router]); // Ensure to include router as a dependency
+  }, [router]);
 
-  return null; // You can return null or a loading indicator if needed
+  return null;
 }
