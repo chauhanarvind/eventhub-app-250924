@@ -1,0 +1,146 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  animation: fadeIn 1s ease-in-out;
+  color: #333;
+}
+
+.section {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideIn 0.6s ease-in-out forwards;
+}
+
+.section:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.section:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.section:nth-child(4) {
+  animation-delay: 0.9s;
+}
+
+.title {
+  font-size: 2.5em;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+  animation: slideInFromLeft 0.8s ease-in-out;
+}
+
+.subtitle {
+  font-size: 2em;
+  font-weight: 700;
+  color: #333;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  animation: slideInFromLeft 0.8s ease-in-out;
+}
+
+.paragraph {
+  line-height: 1.6;
+  margin-bottom: 20px;
+  animation: fadeInUp 0.6s ease-in-out;
+}
+
+.list {
+  list-style-type: none;
+  padding-left: 0;
+  animation: fadeInUp 0.6s ease-in-out;
+}
+
+.listItem {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.listItem:hover {
+  transform: translateY(-5px);
+}
+
+.teamMember {
+  margin-bottom: 20px;
+  animation: fadeInUp 0.6s ease-in-out;
+}
+
+.teamTitle {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+/* em {
+  color: #555;
+  font-style: italic;
+} */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 2em;
+  }
+
+  .subtitle {
+    font-size: 1.75em;
+  }
+
+  .teamTitle {
+    font-size: 1.25em;
+  }
+}

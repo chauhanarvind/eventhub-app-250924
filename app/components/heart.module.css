@@ -1,0 +1,9 @@
+/* Heart.module.css */
+.heart {
+  cursor: pointer;
+  transition: fill 0.3s ease;
+}
+
+.heart.clicked {
+  fill: red;
+}

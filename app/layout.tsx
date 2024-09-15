@@ -6,6 +6,11 @@ import Navbar from "./navbar/navbar";
 import { createContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation"; // Import usePathname
 import isAuthenticated from "./components/isAuthenticated";
+import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
+import "./globals.css"; // Import your custom styles if any
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css"; // Import the CSS
+config.autoAddCss = false;
 
 // Local fonts configuration
 const geistSans = localFont({
@@ -49,13 +54,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Include Bootstrap CSS in the head */}
-        <link
-          href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-          crossOrigin="anonymous"
-        />
+        <link rel="icon" href="/icon.png" />
+
+        <meta name="description" content="Nearby events" />
+        <title>Eventhub app</title>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-indigo-300`}
@@ -67,25 +69,6 @@ export default function RootLayout({
             <div className="bodyRest">{children}</div>
           </div>
         </GlobalContext.Provider>
-
-        {/* jQuery Script */}
-        <Script
-          src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-          integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-          crossOrigin="anonymous"
-        />
-        {/* Popper.js Script */}
-        <Script
-          src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/js/popper.min.js"
-          integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-          crossOrigin="anonymous"
-        />
-        {/* Bootstrap JS Script */}
-        <Script
-          src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-          integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-          crossOrigin="anonymous"
-        />
       </body>
     </html>
   );

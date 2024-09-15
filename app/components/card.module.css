@@ -4,3 +4,12 @@
   min-height: 400px !important;
   cursor: pointer;
 }
+
+/* card.module.css */
+.heart {
+  position: absolute; /* Position it absolutely */
+  bottom: 10px; /* Adjust this value to position it at the bottom */
+  right: 10px; /* Adjust this value to position it to the right */
+  cursor: pointer;
+  z-index: 1; /* Ensure it is above other elements if needed */
+}

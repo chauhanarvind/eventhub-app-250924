@@ -5,11 +5,8 @@ import styles from "./page.module.css";
 
 const Page = () => {
   const [formData, setFormData] = useState({
-    email: "",
     username: "",
     password: "",
-    name: "",
-    confirmpassword: "",
   });
 
   const [message, setMessage] = useState("");
@@ -25,11 +22,14 @@ const Page = () => {
     console.log(formData);
 
     try {
-      const response = await fetch("/api/user/register", {
-        method: "Post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "http://ec2-34-229-185-121.compute-1.amazonaws.com/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const result = await response.json();
 
@@ -38,11 +38,8 @@ const Page = () => {
       if (response.ok) {
         setMessage("User created successfully");
         setFormData({
-          name: "",
           username: "",
-          email: "",
           password: "",
-          confirmpassword: "",
         });
       } else {
         console.log("error", result);
@@ -83,7 +80,10 @@ const Page = () => {
             placeholder="Password"
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button
+          type="submit"
+          className={`btn btn-primary ${styles.buttoncontainer}`}
+        >
           Submit
         </button>
       </form>

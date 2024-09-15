@@ -3,4 +3,7 @@
   border-radius: 5px;
   padding: 10px;
 }
-  
+
+.buttoncontainer {
+  margin: 10px 10px 10px 0;
+}

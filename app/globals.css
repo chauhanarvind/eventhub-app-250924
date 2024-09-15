@@ -36,6 +36,7 @@ body {
   z-index: 1000; /* Ensure it's on top of other elements */
   /* border: 1px solid red; */
   /* border: none !important; */
+  background-color: #360b54;
 }
 
 .bodyRest {
