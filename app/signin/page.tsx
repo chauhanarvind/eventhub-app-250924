@@ -23,7 +23,7 @@ const Page = () => {
     try {
       console.log(formData);
       const response = await fetch(
-        "http://ec2-34-229-185-121.compute-1.amazonaws.com/login",
+        "https://ec2-34-229-185-121.compute-1.amazonaws.com/api/login",
         {
           method: "Post",
           headers: { "Content-Type": "application/json" },

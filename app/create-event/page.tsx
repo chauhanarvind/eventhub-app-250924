@@ -48,7 +48,7 @@ const CreateEventForm = () => {
       const token = localStorage.getItem("token");
       console.log(formData);
       const response = await axios.post(
-        "http://ec2-34-229-185-121.compute-1.amazonaws.com/createEvent",
+        "https://ec2-34-229-185-121.compute-1.amazonaws.com/api/createEvent",
         formData,
         {
           headers: {

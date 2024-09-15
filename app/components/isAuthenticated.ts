@@ -8,7 +8,7 @@ async function isAuthenticated() {
       return false;
     }
     const response = await fetch(
-      "http://ec2-34-229-185-121.compute-1.amazonaws.com/verifyToken",
+      "https://ec2-34-229-185-121.compute-1.amazonaws.com/api/verifyToken",
       {
         method: "POST", // or 'POST', 'PUT', etc.
         headers: {

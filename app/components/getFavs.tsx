@@ -11,7 +11,7 @@ async function GetFavs() {
     }
 
     const response = await fetch(
-      "http://ec2-34-229-185-121.compute-1.amazonaws.com/getfav",
+      "https://ec2-34-229-185-121.compute-1.amazonaws.com/api/getfav",
       {
         method: "GET",
         headers: {

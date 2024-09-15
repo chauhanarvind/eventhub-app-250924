@@ -63,7 +63,7 @@ const Card = ({
     }
   }, [favs, event.eventID]);
 
-  let time = new Date(event.time).toDateString();
+  const time: string = new Date(event.time).toDateString();
 
   async function handleHeartClicked() {
     const newHeartState = !heartClicked;
@@ -79,7 +79,7 @@ const Card = ({
       let response;
       if (newHeartState) {
         response = await fetch(
-          `http://ec2-34-229-185-121.compute-1.amazonaws.com/addfav/${event.eventID}`,
+          `https://ec2-34-229-185-121.compute-1.amazonaws.com/api/addfav/${event.eventID}`,
           {
             method: "POST",
             headers: {
@@ -90,7 +90,7 @@ const Card = ({
         );
       } else {
         response = await fetch(
-          `http://ec2-34-229-185-121.compute-1.amazonaws.com/delfav/${event.eventID}`,
+          `https://ec2-34-229-185-121.compute-1.amazonaws.com/api/delfav/${event.eventID}`,
           {
             method: "DELETE",
             headers: {
