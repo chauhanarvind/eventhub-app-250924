@@ -3,13 +3,12 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Script from "next/script";
 import Navbar from "./navbar/navbar";
-import { createContext, useEffect, useState } from "react";
-import { usePathname } from "next/navigation"; // Import usePathname
+import { usePathname, useRouter } from "next/navigation";
 import isAuthenticated from "./components/isAuthenticated";
-import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
-import "./globals.css"; // Import your custom styles if any
+import { GlobalProvider } from "./context/GlobalContext"; // Import the GlobalProvider
 import { config } from "@fortawesome/fontawesome-svg-core";
-import "@fortawesome/fontawesome-svg-core/styles.css"; // Import the CSS
+import "@fortawesome/fontawesome-svg-core/styles.css"; // Import FontAwesome CSS
+import { useEffect } from "react";
 config.autoAddCss = false;
 
 // Local fonts configuration
@@ -24,51 +23,73 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export const GlobalContext = createContext<{
-  globalVar: boolean;
-  setGlobalVar: (value: boolean) => void;
-}>({
-  globalVar: false,
-  setGlobalVar: () => {},
-});
-
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  const [globalVar, setGlobalVar] = useState(false);
-  const pathname = usePathname(); // Get the current pathname
+}) {
+  const pathname = usePathname();
+  const router = useRouter();
 
-  // Run the function on every route change
+  // Check authentication on every route change
   useEffect(() => {
     const checkAuth = async () => {
-      console.log("Function executed on route change");
       const isAuth = await isAuthenticated();
-      setGlobalVar(isAuth);
+      if (
+        !isAuth &&
+        (pathname === "/watchlist" ||
+          pathname === "/create/uni-event" ||
+          pathname === "/feedback")
+      ) {
+        // Redirect to login if user is not authenticated
+        router.push("/login");
+      }
     };
-
     checkAuth();
-  }, [pathname]); // Trigger this effect when pathname changes
+  }, [pathname, router]);
 
   return (
     <html lang="en">
       <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossOrigin="anonymous"
+        />
         <link rel="icon" href="/icon.png" />
-
         <meta name="description" content="Nearby events" />
         <title>Eventhub app</title>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-indigo-300`}
       >
-        <GlobalContext.Provider value={{ globalVar, setGlobalVar }}>
+        <GlobalProvider>
           <div>
             <Navbar />
-            {/* Render children content */}
             <div className="bodyRest">{children}</div>
           </div>
-        </GlobalContext.Provider>
+        </GlobalProvider>
+
+        {/* Load scripts asynchronously */}
+        <Script
+          src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+          strategy="afterInteractive"
+          integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+          crossOrigin="anonymous"
+        />
+        <Script
+          src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+          strategy="afterInteractive"
+          integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+          crossOrigin="anonymous"
+        />
+        <Script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+          strategy="afterInteractive"
+          integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+          crossOrigin="anonymous"
+        />
       </body>
     </html>
   );

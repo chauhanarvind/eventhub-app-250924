@@ -3,6 +3,7 @@ import UniEvent from "../../models/uniEvent";
 
 export async function GET(req: Request) {
   try {
+    console.log("uni-events get request called");
     const events = await UniEvent.find({});
     const eventsWithBriefDescription = events.map((event) => ({
       ...event._doc,

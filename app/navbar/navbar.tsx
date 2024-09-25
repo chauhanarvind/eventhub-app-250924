@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import styles from "./navbar.module.css";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { GlobalContext } from "../layout";
+import { GlobalContext } from "../context/GlobalContext";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -24,10 +24,12 @@ const Navbar = () => {
       <ul className="nav nav-tabs">
         <li className="nav-item">
           <Link
-            className={`nav-link ${pathname === "/events" ? "underline" : ""}`}
+            className={`nav-link ${
+              pathname === "/uni-events" ? "underline" : ""
+            }`}
             href="/events"
           >
-            Events
+            Uni Events
           </Link>
         </li>
         <li className="nav-item">

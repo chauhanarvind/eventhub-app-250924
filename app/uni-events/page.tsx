@@ -15,10 +15,7 @@ const EventPage = () => {
     async function fetchEvents() {
       try {
         console.log("called");
-        const response = await fetch(
-          "https://ec2-34-229-185-121.compute-1.amazonaws.com/api/Items",
-          { method: "GET" }
-        );
+        const response = await fetch("/api/uni-events", { method: "GET" });
         const data = await response.json();
         setResult(data);
         console.log(data.length);

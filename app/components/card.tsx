@@ -4,7 +4,6 @@ import styles from "./card.module.css";
 import EventFormData from "../interface/eventFormData";
 import Heart from "./heart";
 import { useRouter } from "next/navigation";
-import EventDetail from "../events/detail/page";
 
 interface Props {
   event: EventFormData;

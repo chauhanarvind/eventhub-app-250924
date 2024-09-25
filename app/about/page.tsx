@@ -23,7 +23,7 @@ const Page = () => {
           And so, EventHub was born. Our mission is to bring all the incredible
           happenings in Hamilton into one central location. Imagine a place
           where you can effortlessly explore, discover, and participate in the
-          rich tapestry of events that make our city so unique. Whether it's a
+          rich tapestry of events that make our city so unique. Whether its a
           concert, festival, workshop, or community gathering, EventHub is your
           go-to source for all things happening in Hamilton.
         </p>
@@ -31,15 +31,15 @@ const Page = () => {
           For event-goers, EventHub offers a streamlined experience to browse
           events, access detailed information, and easily purchase tickets or
           register—all through a single, user-friendly platform. For
-          organizations, we provide a powerful tool to enhance your event's
+          organizations, we provide a powerful tool to enhance your events
           visibility, reach a larger audience, and boost participation and
           revenue.
         </p>
         <p className={styles.paragraph}>
-          At EventHub, we're more than just a platform; we're a community hub
+          At EventHub, we are more than just a platform; we are a community hub
           designed to bring people together and celebrate the vibrant life of
-          Hamilton. Join us in making our city’s events more accessible and
-          enjoyable for everyone!
+          Hamilton. Join us in making our city&rsquo;s events more accessible
+          and enjoyable for everyone!
         </p>
         <p className={styles.paragraph}>
           <em>
@@ -114,8 +114,8 @@ const Page = () => {
             Munaz Jahan, our visionary CEO, is the heart and soul of EventHub.
             With a strong background in strategic planning and a commitment to
             innovation, Munaz leads our team with a clear and ambitious vision.
-            Her leadership is fueled by a desire to make Hamilton’s events more
-            accessible and engaging, and her expertise drives the strategic
+            Her leadership is fueled by a desire to make Hamilton&rsquo;s events
+            more accessible and engaging, and her expertise drives the strategic
             direction of our company.
           </p>
         </article>
@@ -126,9 +126,9 @@ const Page = () => {
             As Chief Technology Officer, Arvind Chauhan is the technical
             mastermind behind EventHub. His extensive experience in technology
             and software development ensures that our platform remains
-            cutting-edge and user-friendly. Arvind’s passion for technology and
-            innovation plays a crucial role in shaping the future of EventHub
-            and enhancing the user experience.
+            cutting-edge and user-friendly. Arvind&rsquo;s passion for
+            technology and innovation plays a crucial role in shaping the future
+            of EventHub and enhancing the user experience.
           </p>
         </article>
       </section>

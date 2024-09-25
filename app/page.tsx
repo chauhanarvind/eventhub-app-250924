@@ -8,7 +8,7 @@ export default function Home() {
 
   useEffect(() => {
     // Redirect to /events
-    router.push("/events");
+    router.push("/uni-events");
   }, [router]);
 
   return null;

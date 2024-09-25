@@ -2,23 +2,15 @@ import mongoose, { Schema, model, models } from "mongoose";
 
 const watchlistSchema = new Schema({
   userId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", // Reference to User model
     required: true,
   },
-  events: [
-    {
-      eventId: {
-        type: Schema.Types.ObjectId,
-        ref: "Event",
-        required: true,
-      },
-      addedAt: {
-        type: Date,
-        default: Date.now,
-      },
-    },
-  ],
+  eventId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Event", // Reference to Event model
+    required: true,
+  },
 });
 
 const Watchlist = models.Watchlist || model("Watchlist", watchlistSchema);
