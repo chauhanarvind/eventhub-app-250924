@@ -4,11 +4,11 @@ import "./globals.css";
 import Script from "next/script";
 import Navbar from "./navbar/navbar";
 import { usePathname, useRouter } from "next/navigation";
-import isAuthenticated from "./components/isAuthenticated";
-import { GlobalProvider } from "./context/GlobalContext"; // Import the GlobalProvider
+import { GlobalProvider } from "./context/GlobalContext";
 import { config } from "@fortawesome/fontawesome-svg-core";
-import "@fortawesome/fontawesome-svg-core/styles.css"; // Import FontAwesome CSS
+import "@fortawesome/fontawesome-svg-core/styles.css";
 import { useEffect } from "react";
+import { useSession, signIn } from "next-auth/react"; // Import NextAuth.js hooks
 config.autoAddCss = false;
 
 // Local fonts configuration
@@ -28,25 +28,26 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { data: session, status } = useSession(); // Use NextAuth's session
   const pathname = usePathname();
   const router = useRouter();
 
-  // Check authentication on every route change
+  // Check authentication status using NextAuth.js session
   useEffect(() => {
     const checkAuth = async () => {
-      const isAuth = await isAuthenticated();
+      // If the user is not authenticated, redirect them to the login page
       if (
-        !isAuth &&
+        status === "unauthenticated" &&
         (pathname === "/watchlist" ||
           pathname === "/create/uni-event" ||
           pathname === "/feedback")
       ) {
-        // Redirect to login if user is not authenticated
         router.push("/login");
       }
     };
+
     checkAuth();
-  }, [pathname, router]);
+  }, [status, pathname, router]);
 
   return (
     <html lang="en">

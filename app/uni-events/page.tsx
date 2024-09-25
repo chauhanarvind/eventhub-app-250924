@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import Card from "../components/card";
-import GetFavs from "../components/getFavs";
 import EventFormData from "../interface/eventFormData";
 
 const EventPage = () => {
@@ -24,17 +23,7 @@ const EventPage = () => {
       }
     }
 
-    async function fetchFavs() {
-      try {
-        const result = await GetFavs();
-        setFavs(result);
-      } catch (err: any) {
-        console.log(err);
-      }
-    }
-
     fetchEvents();
-    fetchFavs();
   }, []);
 
   return (
