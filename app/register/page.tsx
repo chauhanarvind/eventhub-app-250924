@@ -1,153 +1,240 @@
 "use client";
+import { useState } from "react";
 
-import React, { useState } from "react";
-import styles from "./page.module.css";
+interface formData {
+  fullName: string;
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  phoneNumber: string;
+  dateOfBirth: string;
+  profilePicture: File | null;
+  address: string;
+  gender: string;
+}
 
-const Page = () => {
-  const [formData, setFormData] = useState({
+export default function RegisterPage() {
+  const [formData, setFormData] = useState<formData>({
+    fullName: "",
     username: "",
+    email: "",
     password: "",
+    confirmPassword: "",
+    phoneNumber: "",
+    dateOfBirth: "",
+    profilePicture: null,
+    address: "",
+    gender: "",
   });
 
-  const [message, setMessage] = useState("");
-  const [warnings, setWarnings] = useState({
-    username: "",
-    password: "",
-  });
+  const [errors, setErrors] = useState<any>({});
 
-  const handleInput = (e: any) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const validateForm = () => {
+    const newErrors: any = {};
 
-    if (name === "username") {
-      validateUsername(value);
+    // Full Name Validation
+    if (!formData.fullName) {
+      newErrors.fullName = "Full Name is required";
     }
 
-    if (name === "password") {
-      validatePassword(value);
+    // Username Validation (no spaces allowed)
+    if (!formData.username) {
+      newErrors.username = "Username is required";
+    } else if (/\s/.test(formData.username)) {
+      newErrors.username = "Username cannot contain spaces";
     }
+
+    // Email Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Invalid email format";
+    }
+
+    // Password Validation (alphanumeric, at least 1 special character, length between 8-16)
+    const passwordRegex =
+      /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,16}$/;
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (!passwordRegex.test(formData.password)) {
+      newErrors.password =
+        "Password must be alphanumeric, include at least 1 special character, and be between 8-16 characters without spaces";
+    }
+
+    // Confirm Password Validation
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Confirm Password is required";
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    // Phone Number Validation (optional)
+    if (formData.phoneNumber && !/^\d{10}$/.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = "Phone number must be 10 digits";
+    }
+
+    // Date of Birth Validation (optional, assuming date of birth is in YYYY-MM-DD format)
+    if (
+      formData.dateOfBirth &&
+      !/^\d{4}-\d{2}-\d{2}$/.test(formData.dateOfBirth)
+    ) {
+      newErrors.dateOfBirth = "Date of Birth must be in YYYY-MM-DD format";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const validateUsername = (username: string) => {
-    console.log("hello here");
-    setFormData({ ...formData, username: username.trim() });
-    if (username.length < 4 || username.length > 16) {
-      console.log("hello");
-      setWarnings((prev) => ({
-        ...prev,
-        username: "Username must be between 4-16 characters long.",
-      }));
-    } else {
-      setWarnings((prev) => ({ ...prev, username: "" }));
-    }
-  };
-
-  const validatePassword = (password: string) => {
-    // Password should be at least 8 characters and contain a special character
-    const passwordPattern =
-      /^(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]{8,16}$/;
-
-    if (!passwordPattern.test(password)) {
-      setWarnings((prev) => ({
-        ...prev,
-        password:
-          "Password must be at least 8-16 alpa numeric characters long and contain at least one special character.",
-      }));
-    } else {
-      setWarnings((prev) => ({ ...prev, password: "" }));
-    }
-  };
-
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (formData.username.length == 0 || formData.password.length == 0) {
-      setMessage("Please fill in all fields.");
-      return;
-    }
-
-    // Ensure both username and password are valid before submitting
-    if (warnings.username || warnings.password) {
-      setMessage("Please correct the errors before submitting.");
-      console.log("okayy");
-      return;
-    }
-
-    console.log("mann");
-    try {
+    if (validateForm()) {
+      // Submit form data
       console.log(formData);
-      const response = await fetch(
-        "https://ec2-34-229-185-121.compute-1.amazonaws.com/api/signup",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      const result = await response.json();
-      console.log(result);
-
-      if (response.ok) {
-        setMessage("User created successfully");
-        setFormData({
-          username: "",
-          password: "",
-        });
-      } else {
-        setMessage("Error: " + result.message);
-      }
-    } catch (error: any) {
-      console.log(error);
-      setMessage("An error occurred while creating the user");
     }
   };
 
   return (
     <div>
-      <h3>Register</h3>
-      <form onSubmit={handleSubmit} className={styles.box}>
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
+      <h1>Register</h1>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
+        {/* Full Name */}
+        <div>
+          <label>Full Name</label>
           <input
             type="text"
-            name="username"
-            onChange={handleInput}
-            value={formData.username}
-            className="form-control"
-            id="username"
-            aria-describedby="usernameHelp"
-            placeholder="Enter username"
+            value={formData.fullName}
+            onChange={(e) =>
+              setFormData({ ...formData, fullName: e.target.value })
+            }
           />
-          {warnings.username && (
-            <p className="text-danger">{warnings.username}</p>
-          )}
+          {errors.fullName && <p>{errors.fullName}</p>}
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
+
+        {/* Username */}
+        <div>
+          <label>Username</label>
+          <input
+            type="text"
+            value={formData.username}
+            onChange={(e) =>
+              setFormData({ ...formData, username: e.target.value })
+            }
+          />
+          {errors.username && <p>{errors.username}</p>}
+        </div>
+
+        {/* Email */}
+        <div>
+          <label>Email</label>
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+          />
+          {errors.email && <p>{errors.email}</p>}
+        </div>
+
+        {/* Password */}
+        <div>
+          <label>Password</label>
           <input
             type="password"
-            name="password"
-            onChange={handleInput}
             value={formData.password}
-            className="form-control"
-            id="password"
-            placeholder="Password"
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
           />
-          {warnings.password && (
-            <p className="text-danger">{warnings.password}</p>
-          )}
+          {errors.password && <p>{errors.password}</p>}
         </div>
-        <button
-          type="submit"
-          className={`btn btn-primary ${styles.buttoncontainer}`}
-        >
-          Submit
-        </button>
+
+        {/* Confirm Password */}
+        <div>
+          <label>Confirm Password</label>
+          <input
+            type="password"
+            value={formData.confirmPassword}
+            onChange={(e) =>
+              setFormData({ ...formData, confirmPassword: e.target.value })
+            }
+          />
+          {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
+        </div>
+
+        {/* Phone Number (optional) */}
+        <div>
+          <label>Phone Number (Optional)</label>
+          <input
+            type="text"
+            value={formData.phoneNumber}
+            onChange={(e) =>
+              setFormData({ ...formData, phoneNumber: e.target.value })
+            }
+          />
+          {errors.phoneNumber && <p>{errors.phoneNumber}</p>}
+        </div>
+
+        {/* Date of Birth (optional) */}
+        <div>
+          <label>Date of Birth (Optional)</label>
+          <input
+            type="date"
+            value={formData.dateOfBirth}
+            onChange={(e) =>
+              setFormData({ ...formData, dateOfBirth: e.target.value })
+            }
+          />
+          {errors.dateOfBirth && <p>{errors.dateOfBirth}</p>}
+        </div>
+
+        {/* Profile Picture (optional) */}
+        <div>
+          <label>Profile Picture (Optional)</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                profilePicture: e.target.files?.[0] || null,
+              })
+            }
+          />
+        </div>
+
+        {/* Address (optional) */}
+        <div>
+          <label>Address (Optional)</label>
+          <input
+            type="text"
+            value={formData.address}
+            onChange={(e) =>
+              setFormData({ ...formData, address: e.target.value })
+            }
+          />
+        </div>
+
+        {/* Gender (optional) */}
+        <div>
+          <label>Gender (Optional)</label>
+          <select
+            value={formData.gender}
+            onChange={(e) =>
+              setFormData({ ...formData, gender: e.target.value })
+            }
+          >
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <button type="submit">Register</button>
       </form>
-      {message && <p>{message}</p>}
     </div>
   );
-};
-
-export default Page;
+}

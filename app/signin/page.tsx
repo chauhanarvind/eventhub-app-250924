@@ -62,7 +62,7 @@ const Page = () => {
       <h3>Sign in</h3>
       <form onSubmit={handleSubmit} className={styles.box}>
         <div className="form-group">
-          <label htmlFor="username">Username</label>
+          <label htmlFor="username">Username or email</label>
           <input
             type="text"
             name="username"

@@ -5,6 +5,7 @@ declare global {
     conn: mongoose.Connection | null;
     promise: Promise<mongoose.Connection> | null;
   };
+  var _mongoClientPromise: Promise<any>;
 }
 
 // Prevent TypeScript from treating the file as a script
