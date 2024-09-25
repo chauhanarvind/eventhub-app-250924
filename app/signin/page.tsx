@@ -51,6 +51,7 @@ const Page = () => {
         setMessage("Error: " + result.message);
       }
     } catch (error: any) {
+      console.log(error);
       setMessage("Server error");
     }
   };
