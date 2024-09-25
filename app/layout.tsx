@@ -44,7 +44,7 @@ export default function RootLayout({
           pathname === "/create/uni-event" ||
           pathname === "/feedback"
         ) {
-          router.push("/login");
+          router.push("/signin");
         }
       }
     };

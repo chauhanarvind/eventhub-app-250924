@@ -1,22 +1,24 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./navbar.module.css";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { GlobalContext } from "../context/GlobalContext";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
   const pathname = usePathname();
-  const { globalVar, setGlobalVar } = useContext(GlobalContext);
   const router = useRouter();
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    setIsSignedIn(!!token);
+  }, []);
 
   const handleSignOut = () => {
-    // Remove the token from localStorage
-    localStorage.removeItem("token");
-    console.log("Token removed from local storage");
-    setGlobalVar(false);
-    // Redirect to the events page
-    router.push("/events");
+    Cookies.remove("token");
+    setIsSignedIn(false);
+    router.push("/uni-events");
   };
 
   return (
@@ -27,7 +29,7 @@ const Navbar = () => {
             className={`nav-link ${
               pathname === "/uni-events" ? "underline" : ""
             }`}
-            href="/events"
+            href="/uni-events"
           >
             Uni Events
           </Link>
@@ -51,7 +53,7 @@ const Navbar = () => {
           </Link>
         </li>
 
-        {!globalVar && (
+        {!isSignedIn ? (
           <li className="nav-item">
             <Link
               className={`nav-link ${
@@ -62,17 +64,13 @@ const Navbar = () => {
               Sign in
             </Link>
           </li>
-        )}
-
-        {globalVar && (
+        ) : (
           <li className="nav-item">
             <button className="nav-link" onClick={handleSignOut}>
               Sign out
             </button>
           </li>
         )}
-
-        {}
       </ul>
     </div>
   );

@@ -1,111 +1,81 @@
 "use client";
-
-import React, { useState } from "react";
-import styles from "./page.module.css";
-import Link from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
-const Page = () => {
-  const [formData, setFormData] = useState({ username: "", password: "" }); // can be username/email, will look for any in db
+const SignIn = () => {
+  const router = useRouter();
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
 
-  const [message, setMessage] = useState("");
-
-  const handleInput = (e: any) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const router = useRouter();
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
+  const handleSignIn = async () => {
     try {
-      console.log(formData);
-      const response = await fetch(
-        "https://ec2-34-229-185-121.compute-1.amazonaws.com/api/login",
-        {
-          method: "Post",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
+      const res = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-      const result = await response.json();
-
-      console.log("result=", result);
-
-      if (response.ok) {
-        if (result.token) {
-          setMessage("User signed in successfully");
-          setFormData({ username: "", password: "" });
-          localStorage.setItem("token", result.token);
-          console.log("Token saved to local storage");
-          setMessage("Error: " + result.message);
-          router.push("/events");
-        } else {
-          console.log("Token not found in response");
-        }
+      if (res.ok) {
+        const data = await res.json();
+        Cookies.set("token", data.token, { expires: 1 }); // Save token to cookies
+        router.push("/uni-events");
       } else {
-        console.log("error", result);
-        setMessage("Error: " + result.message);
+        const data = await res.json();
+        setError(data.message || "Failed to sign in.");
       }
-    } catch (error: any) {
-      console.log(error);
-      setMessage("Server error");
+    } catch (error) {
+      setError("An error occurred while signing in.");
     }
+  };
+
+  const handleRegister = () => {
+    router.push("/register");
   };
 
   return (
     <div>
-      {/* <Header /> */}
-      <h3>Sign in</h3>
-      <form onSubmit={handleSubmit} className={styles.box}>
-        <div className="form-group">
-          <label htmlFor="username">Username or email</label>
-          <input
-            type="text"
-            name="username"
-            onChange={handleInput}
-            value={formData.username}
-            className="form-control"
-            id="username"
-            aria-describedby="username"
-            placeholder="Enter username"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            onChange={handleInput}
-            value={formData.password}
-            className="form-control"
-            id="password"
-            placeholder="Password"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className={`btn btn-primary ${styles.buttoncontainer}`}
-        >
-          Submit
-        </button>
-
-        <Link href="/register">
-          <button
-            type="button"
-            className={`btn btn-primary ${styles.buttoncontainer}`}
-          >
-            New User
-          </button>
-        </Link>
-      </form>
-      {message && <p>{message}</p>}
+      <h2>Sign In</h2>
+      <input
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        placeholder="username"
+        className="mb-2 p-2 border"
+      />
+      <input
+        type="password"
+        name="password"
+        value={formData.password}
+        onChange={handleChange}
+        placeholder="Password"
+        className="mb-2 p-2 border"
+      />
+      {error && <p className="text-red-500">{error}</p>}
+      <button
+        onClick={handleSignIn}
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        Sign In
+      </button>
+      <button
+        onClick={handleRegister}
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        Register
+      </button>
     </div>
   );
 };
 
-export default Page;
+export default SignIn;
