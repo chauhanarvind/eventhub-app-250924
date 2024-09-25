@@ -1,13 +1,22 @@
 import { NextResponse } from "next/server";
 import Feedback from "../../../../models/feedback";
 import clientPromise from "../../../../lib/mongodb";
+import { verifyJwt } from "../../../../lib/auth/verifyJWT"; // Import the JWT verifier
 
 export async function POST(
   req: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const { rating, feedback, userId } = await req.json(); // User ID would typically come from the session or auth token
+    // Verify the JWT token
+    const { decodedToken, error, status }: any = await verifyJwt(req);
+
+    if (error) {
+      return new NextResponse(error, { status });
+    }
+
+    const { rating, feedback } = await req.json();
+    const userId = decodedToken?.userId; // Extract userId from the token
 
     if (!rating || rating < 1 || rating > 5) {
       return new NextResponse("Invalid rating", { status: 400 });
@@ -19,7 +28,7 @@ export async function POST(
     // Save the feedback
     const newFeedback = new Feedback({
       eventId: params.id,
-      userId, // Assumed to be obtained from the logged-in session or request context
+      userId, // User ID obtained from the verified JWT
       rating,
       feedback,
     });

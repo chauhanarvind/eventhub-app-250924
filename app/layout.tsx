@@ -8,7 +8,8 @@ import { GlobalProvider } from "./context/GlobalContext";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { useEffect } from "react";
-import { useSession, signIn } from "next-auth/react"; // Import NextAuth.js hooks
+import Cookies from "js-cookie";
+import { verifyToken } from "./utils/jwt"; // Import your JWT utility
 config.autoAddCss = false;
 
 // Local fonts configuration
@@ -28,26 +29,28 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session, status } = useSession(); // Use NextAuth's session
   const pathname = usePathname();
   const router = useRouter();
 
-  // Check authentication status using NextAuth.js session
+  // Check JWT token status using custom JWT authentication
   useEffect(() => {
     const checkAuth = async () => {
-      // If the user is not authenticated, redirect them to the login page
-      if (
-        status === "unauthenticated" &&
-        (pathname === "/watchlist" ||
+      const token = Cookies.get("token"); // Get JWT token from cookies
+
+      if (!token || !verifyToken(token)) {
+        // If no valid token is found, redirect to login page
+        if (
+          pathname === "/watchlist" ||
           pathname === "/create/uni-event" ||
-          pathname === "/feedback")
-      ) {
-        router.push("/login");
+          pathname === "/feedback"
+        ) {
+          router.push("/login");
+        }
       }
     };
 
     checkAuth();
-  }, [status, pathname, router]);
+  }, [pathname, router]);
 
   return (
     <html lang="en">

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import UniEvent from "../../models/uniEvent";
+import { verifyJwt } from "../../lib/auth/verifyJWT";
 
 export async function GET(req: Request) {
   try {
-    console.log("uni-events get request called");
     const events = await UniEvent.find({});
     const eventsWithBriefDescription = events.map((event) => ({
       ...event._doc,
@@ -20,35 +20,38 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const { decodedToken, error, status } = await verifyJwt(req);
+
+    if (error) {
+      return new NextResponse(error, { status });
+    }
+
     const {
       title,
       description,
       date,
       location,
       price,
-      link = null, // Optional field, default to null if not provided
-      category = null, // Optional field, default to null if not provided
-      image = null, // Optional field, default to null if not provided
+      link = null,
+      category = null,
+      image = null,
     } = await req.json();
 
-    // Validate required fields
     if (!title || !description || !date || !location || price == null) {
       return new NextResponse("Missing required fields", { status: 400 });
     }
 
-    // Create a new event object
     const newEvent = new UniEvent({
       title,
       description,
       date,
       location,
       price,
-      link, // Optional link
-      category, // Optional category
-      image, // Optional image
+      link,
+      category,
+      image,
     });
 
-    // Save the event to the database
     await newEvent.save();
 
     return NextResponse.json({
@@ -56,7 +59,6 @@ export async function POST(req: Request) {
       event: newEvent,
     });
   } catch (error) {
-    console.error("Failed to create event:", error);
     return new NextResponse("Failed to create event", { status: 500 });
   }
 }
