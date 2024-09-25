@@ -5,10 +5,13 @@ import { useRouter } from "next/router";
 export default function CreateUniEventPage() {
   const [formData, setFormData] = useState({
     title: "",
-    briefDescription: "",
     description: "",
     date: "",
     location: "",
+    price: "",
+    link: "",
+    category: "",
+    image: "",
   });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,7 +22,7 @@ export default function CreateUniEventPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/uni-events", {
+      const response = await fetch("/api/uni-events", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -27,13 +30,24 @@ export default function CreateUniEventPage() {
         body: JSON.stringify(formData),
       });
 
-      if (!res.ok) {
+      if (!response.ok) {
         throw new Error("Failed to create event");
       }
 
-      const data = await res.json();
+      const result = await response.json();
       setMessage("Event created successfully!");
-      router.push("/uni-events"); // Redirect to the uni-events page after creation
+      setFormData({
+        title: "",
+        description: "",
+        date: "",
+        location: "",
+        price: "",
+        link: "",
+        category: "",
+        image: "",
+      });
+
+      router.push("/uni-events"); // Redirect to uni-events page after creation
     } catch (error: any) {
       setMessage("Error: " + error.message);
     } finally {
@@ -41,47 +55,42 @@ export default function CreateUniEventPage() {
     }
   };
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
   return (
     <div>
-      <h1>Create University Event</h1>
+      <h1>Create a New University Event</h1>
       <form onSubmit={handleSubmit}>
         {/* Title */}
         <div>
           <label>Title</label>
           <input
             type="text"
+            name="title"
             value={formData.title}
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
+            onChange={handleChange}
             required
           />
         </div>
 
-        {/* Brief Description (max 200 characters) */}
+        {/* Description */}
         <div>
-          <label>Brief Description (Max 200 characters)</label>
+          <label>Description</label>
           <textarea
-            value={formData.briefDescription}
-            onChange={(e) =>
-              setFormData({ ...formData, briefDescription: e.target.value })
-            }
-            maxLength={200}
-            required
-          ></textarea>
-        </div>
-
-        {/* Full Description (max 1500 characters) */}
-        <div>
-          <label>Full Description (Max 1500 characters)</label>
-          <textarea
+            name="description"
             value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-            maxLength={1500}
+            onChange={handleChange}
             required
-          ></textarea>
+            maxLength={1500}
+          />
         </div>
 
         {/* Date */}
@@ -89,8 +98,9 @@ export default function CreateUniEventPage() {
           <label>Date</label>
           <input
             type="date"
+            name="date"
             value={formData.date}
-            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+            onChange={handleChange}
             required
           />
         </div>
@@ -100,11 +110,58 @@ export default function CreateUniEventPage() {
           <label>Location</label>
           <input
             type="text"
+            name="location"
             value={formData.location}
-            onChange={(e) =>
-              setFormData({ ...formData, location: e.target.value })
-            }
+            onChange={handleChange}
             required
+          />
+        </div>
+
+        {/* Price */}
+        <div>
+          <label>Price</label>
+          <input
+            type="number"
+            name="price"
+            value={formData.price}
+            onChange={handleChange}
+            required
+            min="0"
+          />
+        </div>
+
+        {/* Optional Fields */}
+
+        {/* Link */}
+        <div>
+          <label>Link (optional)</label>
+          <input
+            type="url"
+            name="link"
+            value={formData.link}
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Category */}
+        <div>
+          <label>Category (optional)</label>
+          <input
+            type="text"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Image URL */}
+        <div>
+          <label>Image URL (optional)</label>
+          <input
+            type="url"
+            name="image"
+            value={formData.image}
+            onChange={handleChange}
           />
         </div>
 
@@ -114,7 +171,7 @@ export default function CreateUniEventPage() {
         </button>
       </form>
 
-      {/* Feedback Message */}
+      {/* Display feedback message */}
       {message && <p>{message}</p>}
     </div>
   );

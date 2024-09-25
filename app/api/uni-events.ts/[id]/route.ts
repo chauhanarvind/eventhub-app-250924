@@ -22,15 +22,14 @@ export async function GET(
     }
 
     // Cap the description to 1500 characters if it exceeds that length
-    const briefDescription =
-      event.description.length > 1500
-        ? event.description.slice(0, 1500) + "..."
-        : event.description;
+    if (event.description.length > 1500) {
+      return new NextResponse(
+        "Descrption cannot be more than 1500 characters",
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json({
-      ...event._doc, // Spread other event details
-      briefDescription,
-    });
+    return NextResponse.json(event);
   } catch (error) {
     return new NextResponse("Failed to fetch event details", { status: 500 });
   }

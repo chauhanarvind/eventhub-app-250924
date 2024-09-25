@@ -79,6 +79,10 @@ export default function UniEventDetailPage() {
         <strong>Location:</strong> {event.location}
       </p>
 
+      <p>
+        <strong>Price:</strong>
+        {event.price}
+      </p>
       <h2>Description</h2>
       <p>
         <strong>Descrption:</strong>
