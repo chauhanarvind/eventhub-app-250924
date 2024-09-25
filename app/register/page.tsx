@@ -75,6 +75,7 @@ const Page = () => {
 
     console.log("mann");
     try {
+      console.log(formData);
       const response = await fetch(
         "https://ec2-34-229-185-121.compute-1.amazonaws.com/api/signup",
         {
@@ -85,6 +86,7 @@ const Page = () => {
       );
 
       const result = await response.json();
+      console.log(result);
 
       if (response.ok) {
         setMessage("User created successfully");
